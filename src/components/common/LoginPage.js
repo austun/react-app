@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {loginSuccess} from '../../actions/Actions';
 import {loginService} from '../../service/LoginService';
 import {Link} from 'react-router-3';
@@ -29,18 +29,16 @@ class LoginPage extends React.Component {
                     } else {
                         this.setState({errors: "Login attempt is not successful", isLoading: false});
                     }
-
                 }
             );
     }
 
     onChange(e) {
-        this.setState({ [e.target.name]: e.target.value });
+        this.setState({[e.target.name]: e.target.value});
     }
 
-
     render() {
-        const { errors, username, password, isLoading } = this.state;
+        const {errors, username, password, isLoading} = this.state;
 
         return (
             <div className="row">
@@ -50,18 +48,20 @@ class LoginPage extends React.Component {
 
                         <div className="form-group">
                             <label htmlFor="username">Username</label>
-                            <input type="text" className="form-control" name="username" value={username} onChange={this.onChange} />
+                            <input type="text" className="form-control" name="username" value={username}
+                                   onChange={this.onChange}/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="password">Password</label>
-                            <input type="password" className="form-control" name="password" value={password} onChange={this.onChange} />
+                            <input type="password" className="form-control" name="password" value={password}
+                                   onChange={this.onChange}/>
                         </div>
                         <div className="form-group">
                             <button className="btn btn-primary btn-lg" disabled={isLoading}>Login</button>
                             <Link to="/register" className="btn btn-link">Sign Up</Link>
                         </div>
 
-                        { errors != null && <div className="alert alert-danger">{errors}</div> }
+                        {errors != null && <div className="alert alert-danger">{errors}</div>}
                     </form>
                 </div>
             </div>
