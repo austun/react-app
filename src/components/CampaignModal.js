@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,6 +7,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Slide from '@material-ui/core/Slide';
 import Platform from "./Platform";
+import * as actions from '../actions/Actions';
+import {bindActionCreators} from "redux";
+import {connect} from 'react-redux';
 
 const styles = {
     appBar: {
@@ -25,32 +27,26 @@ function Transition(props) {
 
 class CampaignModal extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            selectedCampaign: null
-        }
-    }
-
-    state = {
-        open: false
-    };
-
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.props.actions.loadCampaignById(this.props.id);
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.props.actions.initStates();
     };
 
     render() {
         const {classes} = this.props;
         let platformsToRender = [];
-        let keys = Object.keys(this.props.campaign.platforms);
-        for (let i = 0; i < keys.length; i++) {
-            platformsToRender[i] = <Platform platform={this.props.campaign.platforms[keys[i]]} platformName={keys[i]}/>;
+        let title;
+
+        if (this.props.campaign) {
+            title = this.props.campaign.name;
+            let keys = Object.keys(this.props.campaign.platforms);
+            for (let i = 0; i < keys.length; i++) {
+                platformsToRender[i] =
+                    <Platform platform={this.props.campaign.platforms[keys[i]]} platformName={keys[i]}/>;
+            }
         }
 
         return (
@@ -58,14 +54,14 @@ class CampaignModal extends React.Component {
                 <Button onClick={this.handleClickOpen}>Details</Button>
                 <Dialog
                     fullScreen
-                    open={this.state.open}
+                    open={this.props.open}
                     onClose={this.handleClose}
                     TransitionComponent={Transition}
                 >
                     <AppBar className={classes.appBar}>
                         <Toolbar>
                             <Typography variant="h6" color="inherit" className={classes.flex}>
-                                Details of {this.props.campaign.name}
+                                Details of {title}
                             </Typography>
                             <Button color="inherit" onClick={this.handleClose}>
                                 close
@@ -79,8 +75,15 @@ class CampaignModal extends React.Component {
     }
 }
 
-CampaignModal.propTypes = {
-    classes: PropTypes.object.isRequired
-}
+const mapStateToProps = state => ({
+    isFetching: state.isFetching,
+    campaign: state.campaign,
+    error: state.error,
+    open: state.open
+});
 
-export default withStyles(styles)(CampaignModal);
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CampaignModal));

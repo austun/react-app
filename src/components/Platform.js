@@ -17,11 +17,13 @@ class Platform extends React.Component {
         let platformName = this.props.platformName.charAt(0).toUpperCase() + this.props.platformName.slice(1);
         return (
             <List>
+                <br/>
                 <Divider/>
-                <Typography variant="h6" color="inherit">
+                <Typography variant="h5" color="inherit">
                     {platformName} Campaign Details
                 </Typography>
                 <Divider/>
+
                 <ListItem button>
                     <ListItemText primary="Status" secondary={this.props.platform.status}/>
                     <ListItemText primary="Total budget" secondary={this.props.platform.total_budget}/>
@@ -29,24 +31,31 @@ class Platform extends React.Component {
                     <ListItemText primary="Start date" secondary={start_date.toDateString()}/>
                     <ListItemText primary="End date" secondary={end_date.toDateString()}/>
                 </ListItem>
+
                 <Divider/>
                 <Typography variant="h5" color="inherit">
                     {platformName} Creatives
                 </Typography>
                 <Divider/>
+
                 <Creatives creatives={this.props.platform.creatives}/>
+
                 <Divider/>
                 <Typography variant="h5" color="inherit">
                     {platformName} Target Audiences
                 </Typography>
                 <Divider/>
+
                 <TargetAudience targetAudience={this.props.platform.target_audiance}/>
+
                 <Divider/>
                 <Typography variant="h5" color="inherit">
                     {platformName} Insights
                 </Typography>
                 <Divider/>
+
                 <Insights insights={this.props.platform.insights}/>
+                <Divider/>
             </List>
         );
     }

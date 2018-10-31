@@ -1,32 +1,29 @@
 import React from 'react';
 import Table from '@material-ui/core/Table';
 import CampaignModal from "./CampaignModal";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import * as campaignActions from '../actions/Actions';
 
 class Campaigns extends React.Component {
-    constructor(props) {
-        super(props);
 
-        this.selectCampaign = this.selectCampaign.bind(this);
-
-        this.state = {
-            selectedCampaign: null
-        }
-
-    }
-
-    selectCampaign(campaignId) {
-        const filteredCampaigns = this.props.data.filter(campaign => campaign.id === campaignId);
-        return filteredCampaigns[0];
+    componentWillMount() {
+        this.props.actions.loadCampaigns();
     }
 
     render() {
-        return this.customizedTable();
+        if(this.props.campaigns)
+            return this.customizedTable();
+
+        return (
+            <h1>Loading...</h1>
+        );
     }
 
     customizedTable() {
@@ -55,7 +52,7 @@ class Campaigns extends React.Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.data.map(row => {
+                        {this.props.campaigns.map(row => {
                             return (
                                 <TableRow key={row.id}>
                                     <CustomTableCell component="th" scope="row">{row.id}</CustomTableCell>
@@ -63,7 +60,7 @@ class Campaigns extends React.Component {
                                     <CustomTableCell numeric>{row.goal}</CustomTableCell>
                                     <CustomTableCell numeric>{row.total_budget}</CustomTableCell>
                                     <CustomTableCell numeric>{row.status}</CustomTableCell>
-                                    <CustomTableCell numeric><CampaignModal campaign={this.selectCampaign(row.id)}/></CustomTableCell>
+                                    <CustomTableCell numeric><CampaignModal id={row.id}/></CustomTableCell>
                                 </TableRow>
                             );
                         })}
@@ -74,4 +71,14 @@ class Campaigns extends React.Component {
     }
 }
 
-export default Campaigns;
+const mapStateToProps = state =>({
+    isFetching: state.isFetching,
+    campaigns: state.campaigns,
+    error: state.error
+});
+
+const mapDispatchToProps = dispatch => ({
+        actions: bindActionCreators(campaignActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Campaigns);

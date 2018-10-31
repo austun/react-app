@@ -1,39 +1,22 @@
-import React, { Component } from 'react';
-import Campaigns from './components/Campaigns';
+import React, {Component} from 'react';
+import {PropTypes} from 'prop-types';
 import './App.css';
-import axios from "../node_modules/axios"
-
-const API_URL = 'http://localhost:8080';
+import Header from "./components/common/Header";
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            campaigns: [],
-        };
-        this.getCampaigns = this.getCampaigns.bind(this);
-    }
-
-    componentDidMount() {
-        this.getCampaigns();
-    }
-
     render() {
-        return <Campaigns data={this.state.campaigns}/>
-    }
-
-    getCampaigns() {
-        const url = API_URL + '/campaign/all';
-
-        axios.get(url)
-            .then(obj => {
-                console.log(obj.data);
-                this.setState({
-                    campaigns: obj.data,
-                });
-            })
+        return(
+            <div className="container-fluid">
+                <Header/>
+                {this.props.children}
+            </div>
+        );
     }
 }
+
+App.propTypes = {
+    children: PropTypes.object.isRequired
+};
 
 export default App;
 
